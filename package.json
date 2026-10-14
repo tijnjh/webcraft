@@ -1,0 +1,11 @@
+{
+  "type": "module",
+  "main": "./index.ts",
+  "devDependencies": {
+    "@types/node": "^26.6.5"
+  },
+  "dependencies": {
+    "extract-zip": "^2.0.1",
+    "unzipper": "^0.12.5"
+  }
+}
