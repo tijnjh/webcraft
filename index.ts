@@ -14,18 +14,18 @@ import { Readable } from "node:stream";
 
 const reposToCheck = [
   "photo",
-  "pdf",
+  "vector",
   "film",
   "light",
-  "word",
-  "vector",
+  "pdf",
   "effect",
-  "grid",
-  "cad",
   "design",
-  "deck",
-  "sound",
   "fig",
+  "word",
+  "sound",
+  "deck",
+  "cad",
+  "grid",
 ];
 
 const promises = [];
@@ -99,43 +99,92 @@ let html = `<!DOCTYPE html>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>tijn.dev craft apps</title>
       <style>
-    body {
-      font-family: monospace;
-      padding: 1rem;
-      font-size: 1.25rem;
-      background-color: #252525;
-      max-width: 700px;
-      margin-inline: auto;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-    }
-
-    ul {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      margin: 0;
-    }
-
-    a {
-      color: dodgerblue;
-      text-decoration: none;
-      padding-block: .5rem;
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      img {
-        height: 3rem;
-        width: 3rem;
+        body {
+        font-family: monospace;
+        font-size: 1.25rem;
+        background-color: #252525;
       }
 
-      &:hover::before {
-        content: "> "
+      @media (min-width: 768px) {
+        body {
+          margin-block: 4vw;
+          padding: 1rem;
+        }
+        ul {
+          grid-template-columns: 1fr 1fr 1fr 1fr !important;
+        }
       }
-    }
+
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+      ul {
+        list-style: none;
+        margin: 0;
+        margin-inline: auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        max-width: 1280px;
+        gap: 1px;
+      }
+
+      li {
+        outline: 1px solid #444;
+      }
+
+      li > span {
+        color: #ccc;
+        padding: 0.5rem;
+        display: block;
+      }
+
+      a {
+        color: #ccc;
+        background-color: #252525;
+        text-decoration: none;
+        display: flex;
+        padding-bottom: 1rem;
+        flex-direction: column;
+        overflow: clip;
+
+        .icon {
+          height: 3rem;
+          width: 3rem;
+          margin-left: 1rem;
+          margin-top: -1.5rem;
+        }
+
+        .icon,
+        .hero {
+          transition: scale 0.2s ease;
+
+          transform-origin: bottom;
+        }
+
+        span {
+          margin-left: 1rem;
+          margin-top: 0.5rem;
+        }
+
+        .hero {
+          width: 100%;
+          object-fit: cover;
+          height: 9rem;
+          transform-origin: bottom;
+        }
+
+        &:hover {
+          .icon {
+            scale: 1.1;
+          }
+
+          .hero {
+            scale: 1.1;
+          }
+        }
+      }
   </style>
 </head>
 <body>
@@ -145,9 +194,11 @@ let html = `<!DOCTYPE html>
 
 for (const app of reposToCheck) {
   html += `<li>
+  <span>${reposToCheck.indexOf(app) + 1}</span>
   <a href="https://${app}.craft.tijn.dev">
-    <img src="https://getartcraft.com/images/apps/${app}craft/icon.webp"> 
-    ${app}craft
+    <img class="hero" src="https://getartcraft.com/images/apps/${app}craft/hero.webp"> 
+    <img class="icon" src="https://getartcraft.com/images/apps/${app}craft/icon.webp"> 
+    <span>${app}craft</span>
   </a>
 </li>
 `;

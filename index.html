@@ -5,124 +5,199 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>tijn.dev craft apps</title>
       <style>
-    body {
-      font-family: monospace;
-      padding: 1rem;
-      font-size: 1.25rem;
-      background-color: #252525;
-      max-width: 700px;
-      margin-inline: auto;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-    }
-
-    ul {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      margin: 0;
-    }
-
-    a {
-      color: dodgerblue;
-      text-decoration: none;
-      padding-block: .5rem;
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      img {
-        height: 3rem;
-        width: 3rem;
+        body {
+        font-family: monospace;
+        font-size: 1.25rem;
+        background-color: #252525;
       }
 
-      &:hover::before {
-        content: "> "
+      @media (min-width: 768px) {
+        body {
+          margin-block: 4vw;
+          padding: 1rem;
+        }
+        ul {
+          grid-template-columns: 1fr 1fr 1fr 1fr !important;
+        }
       }
-    }
+
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+      ul {
+        list-style: none;
+        margin: 0;
+        margin-inline: auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        max-width: 1280px;
+        gap: 1px;
+      }
+
+      li {
+        outline: 1px solid #444;
+      }
+
+      li > span {
+        color: #ccc;
+        padding: 0.5rem;
+        display: block;
+      }
+
+      a {
+        color: #ccc;
+        background-color: #252525;
+        text-decoration: none;
+        display: flex;
+        padding-bottom: 1rem;
+        flex-direction: column;
+        overflow: clip;
+
+        .icon {
+          height: 3rem;
+          width: 3rem;
+          margin-left: 1rem;
+          margin-top: -1.5rem;
+        }
+
+        .icon,
+        .hero {
+          transition: scale 0.2s ease;
+
+          transform-origin: bottom;
+        }
+
+        span {
+          margin-left: 1rem;
+          margin-top: 0.5rem;
+        }
+
+        .hero {
+          width: 100%;
+          object-fit: cover;
+          height: 9rem;
+          transform-origin: bottom;
+        }
+
+        &:hover {
+          .icon {
+            scale: 1.1;
+          }
+
+          .hero {
+            scale: 1.1;
+          }
+        }
+      }
   </style>
 </head>
 <body>
   
 <ul>
 <li>
+  <span>1</span>
   <a href="https://photo.craft.tijn.dev">
-    <img src="https://getartcraft.com/images/apps/photocraft/icon.webp"> 
-    photocraft
+    <img class="hero" src="https://getartcraft.com/images/apps/photocraft/hero.webp"> 
+    <img class="icon" src="https://getartcraft.com/images/apps/photocraft/icon.webp"> 
+    <span>photocraft</span>
   </a>
 </li>
 <li>
-  <a href="https://pdf.craft.tijn.dev">
-    <img src="https://getartcraft.com/images/apps/pdfcraft/icon.webp"> 
-    pdfcraft
-  </a>
-</li>
-<li>
-  <a href="https://film.craft.tijn.dev">
-    <img src="https://getartcraft.com/images/apps/filmcraft/icon.webp"> 
-    filmcraft
-  </a>
-</li>
-<li>
-  <a href="https://light.craft.tijn.dev">
-    <img src="https://getartcraft.com/images/apps/lightcraft/icon.webp"> 
-    lightcraft
-  </a>
-</li>
-<li>
-  <a href="https://word.craft.tijn.dev">
-    <img src="https://getartcraft.com/images/apps/wordcraft/icon.webp"> 
-    wordcraft
-  </a>
-</li>
-<li>
+  <span>2</span>
   <a href="https://vector.craft.tijn.dev">
-    <img src="https://getartcraft.com/images/apps/vectorcraft/icon.webp"> 
-    vectorcraft
+    <img class="hero" src="https://getartcraft.com/images/apps/vectorcraft/hero.webp"> 
+    <img class="icon" src="https://getartcraft.com/images/apps/vectorcraft/icon.webp"> 
+    <span>vectorcraft</span>
   </a>
 </li>
 <li>
+  <span>3</span>
+  <a href="https://film.craft.tijn.dev">
+    <img class="hero" src="https://getartcraft.com/images/apps/filmcraft/hero.webp"> 
+    <img class="icon" src="https://getartcraft.com/images/apps/filmcraft/icon.webp"> 
+    <span>filmcraft</span>
+  </a>
+</li>
+<li>
+  <span>4</span>
+  <a href="https://light.craft.tijn.dev">
+    <img class="hero" src="https://getartcraft.com/images/apps/lightcraft/hero.webp"> 
+    <img class="icon" src="https://getartcraft.com/images/apps/lightcraft/icon.webp"> 
+    <span>lightcraft</span>
+  </a>
+</li>
+<li>
+  <span>5</span>
+  <a href="https://pdf.craft.tijn.dev">
+    <img class="hero" src="https://getartcraft.com/images/apps/pdfcraft/hero.webp"> 
+    <img class="icon" src="https://getartcraft.com/images/apps/pdfcraft/icon.webp"> 
+    <span>pdfcraft</span>
+  </a>
+</li>
+<li>
+  <span>6</span>
   <a href="https://effect.craft.tijn.dev">
-    <img src="https://getartcraft.com/images/apps/effectcraft/icon.webp"> 
-    effectcraft
+    <img class="hero" src="https://getartcraft.com/images/apps/effectcraft/hero.webp"> 
+    <img class="icon" src="https://getartcraft.com/images/apps/effectcraft/icon.webp"> 
+    <span>effectcraft</span>
   </a>
 </li>
 <li>
-  <a href="https://grid.craft.tijn.dev">
-    <img src="https://getartcraft.com/images/apps/gridcraft/icon.webp"> 
-    gridcraft
-  </a>
-</li>
-<li>
-  <a href="https://cad.craft.tijn.dev">
-    <img src="https://getartcraft.com/images/apps/cadcraft/icon.webp"> 
-    cadcraft
-  </a>
-</li>
-<li>
+  <span>7</span>
   <a href="https://design.craft.tijn.dev">
-    <img src="https://getartcraft.com/images/apps/designcraft/icon.webp"> 
-    designcraft
+    <img class="hero" src="https://getartcraft.com/images/apps/designcraft/hero.webp"> 
+    <img class="icon" src="https://getartcraft.com/images/apps/designcraft/icon.webp"> 
+    <span>designcraft</span>
   </a>
 </li>
 <li>
-  <a href="https://deck.craft.tijn.dev">
-    <img src="https://getartcraft.com/images/apps/deckcraft/icon.webp"> 
-    deckcraft
-  </a>
-</li>
-<li>
-  <a href="https://sound.craft.tijn.dev">
-    <img src="https://getartcraft.com/images/apps/soundcraft/icon.webp"> 
-    soundcraft
-  </a>
-</li>
-<li>
+  <span>8</span>
   <a href="https://fig.craft.tijn.dev">
-    <img src="https://getartcraft.com/images/apps/figcraft/icon.webp"> 
-    figcraft
+    <img class="hero" src="https://getartcraft.com/images/apps/figcraft/hero.webp"> 
+    <img class="icon" src="https://getartcraft.com/images/apps/figcraft/icon.webp"> 
+    <span>figcraft</span>
+  </a>
+</li>
+<li>
+  <span>9</span>
+  <a href="https://word.craft.tijn.dev">
+    <img class="hero" src="https://getartcraft.com/images/apps/wordcraft/hero.webp"> 
+    <img class="icon" src="https://getartcraft.com/images/apps/wordcraft/icon.webp"> 
+    <span>wordcraft</span>
+  </a>
+</li>
+<li>
+  <span>10</span>
+  <a href="https://sound.craft.tijn.dev">
+    <img class="hero" src="https://getartcraft.com/images/apps/soundcraft/hero.webp"> 
+    <img class="icon" src="https://getartcraft.com/images/apps/soundcraft/icon.webp"> 
+    <span>soundcraft</span>
+  </a>
+</li>
+<li>
+  <span>11</span>
+  <a href="https://deck.craft.tijn.dev">
+    <img class="hero" src="https://getartcraft.com/images/apps/deckcraft/hero.webp"> 
+    <img class="icon" src="https://getartcraft.com/images/apps/deckcraft/icon.webp"> 
+    <span>deckcraft</span>
+  </a>
+</li>
+<li>
+  <span>12</span>
+  <a href="https://cad.craft.tijn.dev">
+    <img class="hero" src="https://getartcraft.com/images/apps/cadcraft/hero.webp"> 
+    <img class="icon" src="https://getartcraft.com/images/apps/cadcraft/icon.webp"> 
+    <span>cadcraft</span>
+  </a>
+</li>
+<li>
+  <span>13</span>
+  <a href="https://grid.craft.tijn.dev">
+    <img class="hero" src="https://getartcraft.com/images/apps/gridcraft/hero.webp"> 
+    <img class="icon" src="https://getartcraft.com/images/apps/gridcraft/icon.webp"> 
+    <span>gridcraft</span>
   </a>
 </li>
 </ul>
