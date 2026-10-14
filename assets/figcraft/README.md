@@ -70,7 +70,7 @@
     </td>
     <td width="25%" valign="top">
       <h3>🔌 Offline and private</h3>
-      Your files are plain <code>.figcraft</code> archives on your own disk. No account, no cloud, no telemetry. SVG, PNG, JPG, WebP and PDF in and out; <code>.fig</code> files open (best effort), and so do designs exported as the public REST API file JSON, with their prototypes and variables.
+      Your files are plain <code>.figcraft</code> archives on your own disk. No account, no telemetry, and nothing leaves your computer unless you share a file (<a href="#privacy-and-online-sharing">what sharing sends where</a>). SVG, PNG, JPG, WebP and PDF in and out; <code>.fig</code> files open (best effort), and so do designs exported as the public REST API file JSON, with their prototypes and variables.
     </td>
     <td width="25%" valign="top">
       <h3>🤖 Agent-ready</h3>
@@ -191,7 +191,7 @@ exposes to agents, and exported at 2x by FigCraft's own renderer. The source fil
     </td>
     <td width="50%" valign="top">
       <h3>Prototype and hand off</h3>
-      Connections, triggers, actions and Smart Animate-style transitions, variables with conditionals (if / else if / else built in the interaction editor, expressions like <code>count + 1</code>), flows, a presentation view with device frames, hotspot hints and an Inspect panel, and a live preview pane. Alt to measure distances and padding on the canvas, Inspect mode with measurements, annotations in colour-coded categories, a ready-for-dev list with a focus view and Compare changes (before / after with property-level diffs since a frame was marked ready), and code (CSS, HTML, React, SwiftUI, Compose) where components take their properties as parameters, comment threads pinned to frames (replies, @mentions, reactions, read state) and named version history. Export any layer at any scale to PNG, JPG, WebP, SVG or PDF.
+      Connections, triggers, actions and Smart Animate-style transitions, variables with conditionals (if / else if / else built in the interaction editor, expressions like <code>count + 1</code>), flows, a presentation view with device frames, hotspot hints and an Inspect panel, and a live preview pane. Alt to measure distances and padding on the canvas, Inspect mode with measurements, annotations in colour-coded categories, a ready-for-dev list with a focus view and Compare changes (before / after with property-level diffs since a frame was marked ready), and code (CSS, HTML, React, Leptos, SwiftUI, Compose) where components take their properties as parameters, comment threads pinned to frames (replies, @mentions, reactions, read state) and named version history. Export any layer at any scale to PNG, JPG, WebP, SVG or PDF.
     </td>
   </tr>
 </table>
@@ -251,6 +251,10 @@ Fonts for the UI and the Text tool come from [craft-fonts](https://github.com/st
 git clone https://github.com/storytold/craft-fonts ../craft-fonts
 ```
 
+If you clone it after a first build, run `cargo clean -p figcraft-text` once so the next build embeds the fonts.
+
+**Start from a template.** The home screen's Templates tab has eight starter files (a mobile app, a landing page, a dashboard, a design system starter, a wireframe kit, social post sizes, presentation slides and an icon set starter), also under File ▸ New from template…. They are built in code from original, synthetic content, so scripts and agents can open them too: `file.newFromTemplate {template}` ([`docs/mcp.md`](docs/mcp.md#starter-templates)).
+
 For the web build, install [trunk](https://trunkrs.dev/) and run `cargo xtask wasm`.
 
 New contributors and AI agents: start with [`AGENTS.md`](AGENTS.md), then [`docs/`](docs/).
@@ -259,6 +263,31 @@ Installers for macOS (universal, signed and notarized), Windows (x64, x86 and ar
 
 > [!IMPORTANT]
 > **Status:** FigCraft is in **alpha**: about 49% of the way to replacing Figma for real work, by our own estimate. Nearly all of Figma's main menu is wired ([`docs/parity-checklist.md`](docs/parity-checklist.md)) and the core editor works end to end, but FigCraft opens `.fig` files only best effort, has only a first preview of multiplayer (live sessions hosted from the app or a self-hosted server, with per-person undo and share links to edit or to view; no accounts, teams or cloud yet), runs its own WebAssembly plugins rather than Figma's, and hasn't been checked against real Figma documents. The honest, area-by-area picture is in the [roadmap](ROADMAP.md) and [`docs/target-app-parity.md`](docs/target-app-parity.md). Expect rough edges and please file issues, or tell us what broke on [Discord](https://discord.gg/artcraft).
+
+## Privacy and online sharing
+
+FigCraft works offline: it has no account and no telemetry, and it contacts no server until you
+share or join a file. Live sessions are a **preview**. Before you share anything that matters,
+know what sharing does:
+
+- **Share ▸ Online uploads the file to a server.** By default that is the public server at
+  `collab.craftapps.dev`; you can set another one, or your own, in Preferences (and a build can
+  ship without it: [`docs/releasing.md`](docs/releasing.md#the-default-server)). The file stays on
+  the server after you stop sharing, until you remove it (Share ▸ Advanced ▸ Remove from server…)
+  or nobody has opened it for 30 days, when a public server deletes it.
+- **It is not end-to-end encrypted.** The connection to the server is encrypted (TLS), but the
+  server stores the file unencrypted and whoever runs the server can read it. Don't share
+  confidential work through a server you don't trust; run your own
+  ([`docs/server.md`](docs/server.md)) or share on the local network instead.
+- **The code or link is the access.** There are no accounts: anyone who has an edit code or link
+  can open and change the file, anyone with a view code or link can open it. Stop sharing revokes
+  them and disconnects everyone else.
+- **Share ▸ Local network involves no server**, but it is not encrypted either: your app hosts
+  the session and others connect to it directly, so use it on networks you trust.
+- **No guarantees.** The public server is offered as is, without backups or uptime promises, and
+  files on it can be removed. Keep your own saved copy of anything you share.
+
+The default server's terms are in [`docs/online-sharing-terms.md`](docs/online-sharing-terms.md).
 
 ## The Crafting Apps
 
