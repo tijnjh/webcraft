@@ -98,6 +98,45 @@ let html = `<!DOCTYPE html>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>tijn.dev craft apps</title>
+      <style>
+    body {
+      font-family: monospace;
+      padding: 1rem;
+      font-size: 1.25rem;
+      background-color: #252525;
+      max-width: 700px;
+      margin-inline: auto;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+    }
+
+    a {
+      color: dodgerblue;
+      text-decoration: none;
+      padding-block: .5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      img {
+        height: 3rem;
+        width: 3rem;
+      }
+
+      &:hover::before {
+        content: "> "
+      }
+    }
+  </style>
 </head>
 <body>
   
@@ -105,10 +144,17 @@ let html = `<!DOCTYPE html>
 `;
 
 for (const app of reposToCheck) {
-  html += `<li><a href="https://${app}.craft.tijn.dev">${app}.craft.tijn.dev</a></li>`;
+  html += `<li>
+  <a href="https://${app}.craft.tijn.dev">
+    <img src="https://getartcraft.com/images/apps/${app}craft/icon.webp"> 
+    ${app}craft
+  </a>
+</li>
+`;
 }
 
-html += `</ul></body>
+html += `</ul>
+</body>
 </html>`;
 
 await writeFile("./index.html", html);
