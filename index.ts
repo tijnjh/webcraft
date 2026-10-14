@@ -103,16 +103,43 @@ let html = `<!DOCTYPE html>
         font-family: monospace;
         font-size: 1.25rem;
         background-color: #252525;
+        color: #ccc;
+      }
+
+      .wrap {
+        max-width: 1280px;
+        display: flex;
+        flex-direction: column; 
+        gap: 2rem;
+        margin: 0 auto;
+      }
+
+
+      .prose {
+        margin: 1rem;
+        margin-top: 3rem;
+        flex-direction: column; 
+
+        gap: 2rem;
+        display: flex;
+
+      }
+
+      a {
+        color: dodgerblue;
       }
 
       @media (min-width: 768px) {
-        body {
+        .wrap {
           margin-block: 4vw;
           padding: 1rem;
         }
         ul {
           grid-template-columns: 1fr 1fr 1fr 1fr !important;
         }
+
+        .prose {
+        margin: 0;}
       }
 
       * {
@@ -123,10 +150,8 @@ let html = `<!DOCTYPE html>
       ul {
         list-style: none;
         margin: 0;
-        margin-inline: auto;
         display: grid;
         grid-template-columns: 1fr 1fr;
-        max-width: 1280px;
         gap: 1px;
       }
 
@@ -135,17 +160,15 @@ let html = `<!DOCTYPE html>
       }
 
       li > span {
-        color: #ccc;
         padding: 0.5rem;
         display: block;
       }
 
-      a {
+      ul > li> a {
         color: #ccc;
         background-color: #252525;
         text-decoration: none;
         display: flex;
-        padding-bottom: 1rem;
         flex-direction: column;
         overflow: clip;
 
@@ -159,13 +182,13 @@ let html = `<!DOCTYPE html>
         .icon,
         .hero {
           transition: scale 0.2s ease;
-
           transform-origin: bottom;
         }
 
         span {
-          margin-left: 1rem;
-          margin-top: 0.5rem;
+          margin: 1rem;
+          display: block;
+          display: flex;
         }
 
         .hero {
@@ -175,6 +198,14 @@ let html = `<!DOCTYPE html>
           transform-origin: bottom;
         }
 
+           span::before {
+           content: "> ";
+           width: 0;
+           transition: width .2s ease;
+           display: block;
+           overflow: clip;
+           }
+
         &:hover {
           .icon {
             scale: 1.1;
@@ -183,12 +214,26 @@ let html = `<!DOCTYPE html>
           .hero {
             scale: 1.1;
           }
+
+          span::before {
+           width: 2ch;
+           }
         }
       }
   </style>
 </head>
 <body>
-  
+
+<div class="wrap">
+
+<div class="prose">
+
+<h1>webcraft</h1>
+
+<p>here you can use all the <a href="https://getartcraft.com">artcraft</a> apps in the browser</p>
+
+<p> site and web apps last updated: ${new Date()}</p>
+  </div>
 <ul>
 `;
 
@@ -205,7 +250,8 @@ for (const app of reposToCheck) {
 }
 
 html += `</ul>
+</div>
 </body>
 </html>`;
 
-await writeFile("./index.html", html);
+await writeFile("./site/index.html", html);
