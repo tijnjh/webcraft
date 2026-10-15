@@ -11,6 +11,12 @@ import { resolve } from "node:path";
 import { createWriteStream } from "node:fs";
 import { pipeline } from "node:stream/promises";
 import { Readable } from "node:stream";
+import express from "express";
+import listing from "serve-index";
+import { once } from "node:events";
+import type { AddressInfo } from "node:net";
+
+process.loadEnvFile();
 
 const reposToCheck = [
   "photo",
@@ -32,11 +38,21 @@ const verMap: Record<(typeof reposToCheck)[number], string> = {};
 
 const promises = [];
 
+const total = reposToCheck.length;
+let done = 0;
+const startTime = Date.now();
+const elapsed = () => `${((Date.now() - startTime) / 1000).toFixed(1)}s`;
+const log = (repo: string, msg: string) =>
+  console.log(`[${elapsed()}] [${done}/${total}] ${repo}: ${msg}`);
+
+console.log(`Updating ${total} repos...`);
+
 for (const r of reposToCheck) {
   const repo = r + "craft";
 
   promises.push(
     (async () => {
+      log(repo, "fetching latest release");
       const temp = await mkdtemp(resolve("assets", ".extract-"));
       const target = resolve("assets", repo);
 
@@ -44,7 +60,7 @@ for (const r of reposToCheck) {
         `https://api.github.com/repos/storytold/${repo}/releases/latest`,
         {
           headers: {
-            Authorization: `Bearer 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`,
+            Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
           },
         },
       );
@@ -66,16 +82,21 @@ for (const r of reposToCheck) {
 
       const downloadUrl = assets[0];
 
-      if (!downloadUrl) throw 0;
+      if (!downloadUrl) {
+        log(repo, `no web asset found in release ${ver}`);
+        throw 0;
+      }
 
       const filePath = `assets/${repo}.zip`;
 
+      log(repo, `downloading ${ver}`);
       const { body }: any = await fetch(downloadUrl);
       const fileStream = createWriteStream(filePath);
 
       await pipeline(Readable.fromWeb(body), fileStream);
 
       try {
+        log(repo, "extracting");
         await extract(filePath, { dir: temp });
 
         const entries = await readdir(temp, { withFileTypes: true });
@@ -92,174 +113,41 @@ for (const r of reposToCheck) {
       } finally {
         await rm(temp, { recursive: true, force: true });
       }
+
+      done++;
+      log(repo, `done (${ver})`);
     })(),
   );
 }
 
 await Promise.all(promises);
 
-let html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tijn.dev craft apps</title>
-      <style>
-        body {
-        font-family: monospace;
-        font-size: 1.25rem;
-        background-color: #252525;
-        color: #ccc;
-      }
+console.log(`[${elapsed()}] All repos updated, generating index.html...`);
 
-      .wrap {
-        max-width: 1280px;
-        display: flex;
-        flex-direction: column; 
-        gap: 2rem;
-        margin: 0 auto;
-      }
+const root = "assets";
+const app = express();
 
+app.use(
+  listing(root, {
+    icons: true,
+    filter: (fileName) => fileName !== "index.html",
+  }),
+);
 
-      .prose {
-        margin: 1rem;
-        margin-top: 3rem;
-        flex-direction: column; 
+const server = app.listen(0, "127.0.0.1");
+await once(server, "listening");
 
-        gap: 2rem;
-        display: flex;
+try {
+  const { port } = server.address() as AddressInfo;
 
-      }
+  const response = await fetch(`http://127.0.0.1:${port}/`, {
+    headers: { accept: "text/html" },
+  });
 
-      a {
-        color: dodgerblue;
-      }
+  if (!response.ok) throw new Error(`status ${response.status}`);
 
-      @media (min-width: 768px) {
-        .wrap {
-          margin-block: 4vw;
-          padding: 1rem;
-        }
-        ul {
-          grid-template-columns: 1fr 1fr 1fr 1fr !important;
-        }
-
-        .prose {
-        margin: 0;}
-      }
-
-      * {
-        margin: 0;
-        padding: 0;
-      }
-
-      ul {
-        list-style: none;
-        margin: 0;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1px;
-      }
-
-      li {
-        outline: 1px solid #444;
-      }
-
-      li > span {
-        padding: 0.5rem;
-        display: block;
-      }
-
-      ul > li> a {
-        color: #ccc;
-        background-color: #252525;
-        text-decoration: none;
-        display: flex;
-        flex-direction: column;
-        overflow: clip;
-
-        .icon {
-          height: 3rem;
-          width: 3rem;
-          margin-left: 1rem;
-          margin-top: -1.5rem;
-        }
-
-        .icon,
-        .hero {
-          transition: scale 0.2s ease;
-          transform-origin: bottom;
-        }
-
-        span {
-          margin: 1rem;
-          display: block;
-          display: flex;
-        }
-
-        .hero {
-          width: 100%;
-          object-fit: cover;
-          height: 9rem;
-          transform-origin: bottom;
-        }
-
-           span::before {
-           content: "> ";
-           width: 0;
-           transition: width .2s ease;
-           display: block;
-           overflow: clip;
-           }
-
-        &:hover {
-          .icon {
-            scale: 1.1;
-          }
-
-          .hero {
-            scale: 1.1;
-          }
-
-          span::before {
-           width: 2ch;
-           }
-        }
-      }
-  </style>
-</head>
-<body>
-
-<div class="wrap">
-
-<div class="prose">
-
-<h1>webcraft</h1>
-
-<p>here you can use all the <a href="https://getartcraft.com">artcraft</a> apps in the browser</p>
-
-<p> site and web apps last updated: ${new Date()}</p>
-  </div>
-<ul>
-`;
-
-for (const app of reposToCheck) {
-  const ver = verMap[app + "craft"];
-
-  html += `<li>
-  <span>${reposToCheck.indexOf(app) + 1}</span>
-  <a href="https://${app}.craft.tijn.dev">
-    <img class="hero" src="https://getartcraft.com/images/apps/${app}craft/hero.webp"> 
-    <img class="icon" src="https://getartcraft.com/images/apps/${app}craft/icon.webp"> 
-    <span>${app}craft ${ver}</span>
-  </a>
-</li>
-`;
+  await writeFile(`${root}/index.html`, await response.text());
+  console.log(`[${elapsed()}] Wrote ${root}/index.html`);
+} finally {
+  server.close();
 }
-
-html += `</ul>
-</div>
-</body>
-</html>`;
-
-await writeFile("./site/index.html", html);
