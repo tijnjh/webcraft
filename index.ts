@@ -146,7 +146,16 @@ try {
 
   if (!response.ok) throw new Error(`status ${response.status}`);
 
-  await writeFile(`${root}/index.html`, await response.text());
+  let html = await response.text();
+  for (const name of reposToCheck) {
+    const repo = `${name}craft`;
+    html = html.replaceAll(
+      `href="/${repo}"`,
+      `href="https://${repo}.craft.tijn.dev/"`,
+    );
+  }
+
+  await writeFile(`${root}/index.html`, html);
   console.log(`[${elapsed()}] Wrote ${root}/index.html`);
 } finally {
   server.close();
