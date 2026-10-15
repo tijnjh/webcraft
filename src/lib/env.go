@@ -6,13 +6,8 @@ import (
 	"strings"
 )
 
-func LoadEnv() error {
-	file, err := os.Open("./.env")
-
-	if err != nil {
-		return err
-	}
-
+func LoadEnv() {
+	file, _ := os.Open("./.env")
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
@@ -32,10 +27,9 @@ func LoadEnv() error {
 		key := strings.TrimSpace(parts[0])
 		value := strings.TrimSpace(parts[1])
 
-		if err := os.Setenv(key, value); err != nil {
-			return err
-		}
+		os.Setenv(key, value)
 	}
-
-	return scanner.Err()
+	if err := scanner.Err(); err != nil {
+		panic(err)
+	}
 }

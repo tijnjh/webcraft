@@ -12,25 +12,16 @@ import (
 	"webcraft/lib"
 )
 
-var reposToCheck []string = {
-	"photo",
-	"vector",
-	"film",
-	"light",
-	"pdf",
-	"effect",
-	"design",
-	"fig",
-	"word",
-	"sound",
-	"deck",
-	"cad",
-	"grid",
+var craftApps = [...]string{
+	"photocraft", "vectorcraft", "filmcraft", "lightcraft",
+	"pdfcraft", "effectcraft", "designcraft", "figcraft",
+	"wordcraft", "soundcraft", "deckcraft", "cadcraft",
+	"gridcraft",
 }
 
 var verMap map[string]string = {}
 
-var total = len(reposToCheck)
+var total = len(craftApps)
 var done = 0
 var startTime = time.Now()
 
@@ -40,45 +31,36 @@ func log(repo, msg string) {
 }
 
 func main() {
-
 	os.RemoveAll("./assets")
 	os.Mkdir("./assets", 0750)
-
-	if err :=
-		lib.LoadEnv(); err != nil {
-		panic(err)
-	}
-
+	lib.LoadEnv()
 	fmt.Printf("Updating %d repos...\n", total)
 
 	var wg sync.WaitGroup
 
-	for _, r := range reposToCheck {
+	for _, repo := range craftApps {
 		wg.Go(func() {
-			repo := r + "craft"
-
 			log(repo, "fetching latest release")
-			temp := lib.Unwrap(os.MkdirTemp("assets", ".extract-"))
+
+			temp, _ := os.MkdirTemp("assets", ".extract-")
+
 			defer os.RemoveAll(temp)
 			target := "assets/" + repo
 
-			res := lib.Unwrap(lib.Fetch("https://api.github.com/repos/storytold/"+repo+"/releases/latest", {
+			release := lib.Fetch("https://api.github.com/repos/storytold/"+repo+"/releases/latest", {
 				Method: "GET",
 				Headers: {
 					"Authorization": "Bearer " + os.Getenv("GITHUB_TOKEN"),
 				},
-			}))
-
-			release := lib.Unwrap(res.Json[struct {
+			}).Json[struct {
 				TagName string `json:"tag_name"`
 				Assets  []struct {
 					Name               string `json:"name"`
 					BrowserDownloadUrl string `json:"browser_download_url"`
 				} `json:"assets"`
-			}]())
+			}]()
 
-			ver := release.TagName
-			verMap[repo] = ver
+			verMap[repo] = release.TagName
 
 			var assets []string
 
@@ -88,34 +70,27 @@ func main() {
 				}
 			}
 
-			var downloadUrl string
-
-			if len(assets) == 0 {
-				log(repo, fmt.Sprintf("no web asset found in release %s", ver))
-				panic(0)
-			} else {
-				downloadUrl = assets[0]
-			}
+			downloadUrl := assets[0]
 
 			filePath := "assets/" + repo + ".zip"
 
-			log(repo, fmt.Sprintf("downloading %s", ver))
+			log(repo, fmt.Sprintf("downloading %s", release.TagName))
 
-			fileStream := lib.Unwrap(os.Create(filePath))
+			fileStream, _ := os.Create(filePath)
 
-			dlResp := lib.Unwrap(lib.Fetch(downloadUrl, {Method: "GET"}))
+			dlResp := lib.Fetch(downloadUrl, {Method: "GET"})
 
-			lib.Unwrap(io.Copy(fileStream, dlResp.Body))
+			io.Copy(fileStream, dlResp.Body)
+
 			dlResp.Body.Close()
+
 			fileStream.Close()
 
 			log(repo, "extracting")
 
-			if err := lib.Unzip(filePath, temp); err != nil {
-				panic(err)
-			}
+			lib.Unzip(filePath, temp)
+			entries, _ := os.ReadDir(temp)
 
-			entries := lib.Unwrap(os.ReadDir(temp))
 			root := entries[0]
 
 			var source string
@@ -131,17 +106,13 @@ func main() {
 			os.Remove(filePath)
 
 			done++
-			log(repo, fmt.Sprintf("done (%s)", ver))
+			log(repo, "done ("+release.TagName+")")
 		})
 	}
 
 	wg.Wait()
 
-	tmpl, err := template.ParseFiles("./src/templates/index.html")
-
-	if err != nil {
-		panic(err)
-	}
+	tmpl, _ := template.ParseFiles("./src/templates/index.html")
 
 	var buf bytes.Buffer
 
@@ -151,21 +122,14 @@ func main() {
 		Version string
 	}] = {}
 
-	for _, repo := range reposToCheck {
+	for _, repo := range craftApps {
 		repos.Push({
-			Name:    repo,
+			Name:    strings.TrimSuffix(repo, "craft"),
 			Date:    time.Now().Format("01/02/2006 03:04:05 PM"),
-			Version: verMap[repo+"craft"],
+			Version: verMap[repo],
 		})
 	}
 
-	if err :=
-		tmpl.Execute(&buf, repos); err != nil {
-		panic(err)
-	}
-
-	if err :=
-		os.WriteFile("./assets/index.html", buf.Bytes(), 0750); err != nil {
-		panic(err)
-	}
+	tmpl.Execute(&buf, repos)
+	os.WriteFile("./assets/index.html", buf.Bytes(), 0750)
 }

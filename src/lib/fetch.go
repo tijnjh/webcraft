@@ -6,46 +6,27 @@ import (
 	"net/http"
 )
 
-type FetchResponse struct {
-	http.Response
-}
+type FetchResponse struct{ http.Response }
 
-func (r FetchResponse) Json[T any]() (*T, error) {
-	body, err := io.ReadAll(r.Body)
-
-	if err != nil {
-		return nil, err
-	}
+func (r *FetchResponse) Json[T any]() *T {
+	body, _ := io.ReadAll(r.Body)
 	r.Body.Close()
-
 	var output T
-
-	if err := json.Unmarshal(body, &output); err != nil {
-		panic(err)
-	}
-
-	return &output, nil
+	json.Unmarshal(body, &output)
+	return &output
 }
 
-func Fetch(path string, opts struct {
-	Method  string
-	Headers map[string]string
-}) (*FetchResponse, error) {
-	req, err := http.NewRequest(opts.Method, path, nil)
-
-	if err != nil {
-		return nil, err
+func Fetch(
+	input string,
+	init struct {
+		Method  string
+		Headers map[string]string
+	},
+) *FetchResponse {
+	request, _ := http.NewRequest(init.Method, input, nil)
+	for key, value := range init.Headers {
+		request.Header.Set(key, value)
 	}
-
-	for key, value := range opts.Headers {
-		req.Header.Set(key, value)
-	}
-
-	res, err := http.DefaultClient.Do(req)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &FetchResponse{Response: *res}, nil
+	resp, _ := http.DefaultClient.Do(request)
+	return {*resp}
 }
