@@ -28,6 +28,8 @@ const reposToCheck = [
   "grid",
 ];
 
+const verMap: Record<(typeof reposToCheck)[number], string> = {};
+
 const promises = [];
 
 for (const r of reposToCheck) {
@@ -48,11 +50,15 @@ for (const r of reposToCheck) {
       );
 
       const release: {
+        tag_name: string;
         assets: Array<{
           name: string;
           browser_download_url: string;
         }>;
       } = await response.json();
+
+      const ver = release.tag_name;
+      verMap[repo] = ver;
 
       const assets = release.assets
         .filter((a) => a.name.includes("web"))
@@ -238,12 +244,14 @@ let html = `<!DOCTYPE html>
 `;
 
 for (const app of reposToCheck) {
+  const ver = verMap[app + "craft"];
+
   html += `<li>
   <span>${reposToCheck.indexOf(app) + 1}</span>
   <a href="https://${app}.craft.tijn.dev">
     <img class="hero" src="https://getartcraft.com/images/apps/${app}craft/hero.webp"> 
     <img class="icon" src="https://getartcraft.com/images/apps/${app}craft/icon.webp"> 
-    <span>${app}craft</span>
+    <span>${app}craft ${ver}</span>
   </a>
 </li>
 `;
