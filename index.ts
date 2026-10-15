@@ -151,7 +151,7 @@ try {
     const repo = `${name}craft`;
     html = html.replaceAll(
       `href="/${repo}"`,
-      `href="https://${repo}.craft.tijn.dev/"`,
+      `href="https://${repo.replaceAll("craft", "")}.craft.tijn.dev/"`,
     );
   }
 
