@@ -35,16 +35,12 @@
     </div>
 
     <script>
-      search.onkeyup = () => {
-        const str = search.value.toLowerCase();
-        files.querySelectorAll("a").forEach((link) => {
-          const text = link.textContent.toLowerCase();
-          if (text === "..") return;
-          str.length && text.includes(str)
-            ? link.classList.add("highlight")
-            : link.classList.remove("highlight");
-        });
-      };
+      // prettier-ignore
+      search.onkeyup = e => files.querySelectorAll
+      ("a").forEach(l => l.textContent.toLowerCase()
+      !== ".." && l.classList[e.target.value.length
+      && l.textContent.toLowerCase().includes(e.target
+      .value.toLowerCase()) ? "add" : "remove"]("highlight"));
     </script>
   </body>
 </html>
