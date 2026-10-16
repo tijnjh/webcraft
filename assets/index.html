@@ -27,7 +27,7 @@
           >
             <span class="name">photocraft v0.9.0</span>
             <span class="size"></span>
-            <span class="date">10/16/2026 11:22:10 AM</span>
+            <span class="date">10/16/2026 11:52:01 AM</span>
           </a>
         </li>
         
@@ -39,7 +39,7 @@
           >
             <span class="name">vectorcraft v0.11.0</span>
             <span class="size"></span>
-            <span class="date">10/16/2026 11:22:10 AM</span>
+            <span class="date">10/16/2026 11:52:01 AM</span>
           </a>
         </li>
         
@@ -51,7 +51,7 @@
           >
             <span class="name">filmcraft v0.8.0</span>
             <span class="size"></span>
-            <span class="date">10/16/2026 11:22:10 AM</span>
+            <span class="date">10/16/2026 11:52:01 AM</span>
           </a>
         </li>
         
@@ -63,7 +63,7 @@
           >
             <span class="name">lightcraft v0.8.0</span>
             <span class="size"></span>
-            <span class="date">10/16/2026 11:22:10 AM</span>
+            <span class="date">10/16/2026 11:52:01 AM</span>
           </a>
         </li>
         
@@ -75,7 +75,7 @@
           >
             <span class="name">pdfcraft v0.8.0</span>
             <span class="size"></span>
-            <span class="date">10/16/2026 11:22:10 AM</span>
+            <span class="date">10/16/2026 11:52:01 AM</span>
           </a>
         </li>
         
@@ -87,7 +87,7 @@
           >
             <span class="name">effectcraft v0.10.0</span>
             <span class="size"></span>
-            <span class="date">10/16/2026 11:22:10 AM</span>
+            <span class="date">10/16/2026 11:52:01 AM</span>
           </a>
         </li>
         
@@ -99,7 +99,7 @@
           >
             <span class="name">designcraft v0.8.0</span>
             <span class="size"></span>
-            <span class="date">10/16/2026 11:22:10 AM</span>
+            <span class="date">10/16/2026 11:52:01 AM</span>
           </a>
         </li>
         
@@ -111,7 +111,7 @@
           >
             <span class="name">figcraft v0.6.0</span>
             <span class="size"></span>
-            <span class="date">10/16/2026 11:22:10 AM</span>
+            <span class="date">10/16/2026 11:52:01 AM</span>
           </a>
         </li>
         
@@ -123,7 +123,7 @@
           >
             <span class="name">wordcraft v0.7.0</span>
             <span class="size"></span>
-            <span class="date">10/16/2026 11:22:10 AM</span>
+            <span class="date">10/16/2026 11:52:01 AM</span>
           </a>
         </li>
         
@@ -135,7 +135,7 @@
           >
             <span class="name">soundcraft v0.7.0</span>
             <span class="size"></span>
-            <span class="date">10/16/2026 11:22:10 AM</span>
+            <span class="date">10/16/2026 11:52:01 AM</span>
           </a>
         </li>
         
@@ -147,7 +147,7 @@
           >
             <span class="name">deckcraft v0.7.0</span>
             <span class="size"></span>
-            <span class="date">10/16/2026 11:22:10 AM</span>
+            <span class="date">10/16/2026 11:52:01 AM</span>
           </a>
         </li>
         
@@ -159,7 +159,7 @@
           >
             <span class="name">cadcraft v0.7.0</span>
             <span class="size"></span>
-            <span class="date">10/16/2026 11:22:10 AM</span>
+            <span class="date">10/16/2026 11:52:01 AM</span>
           </a>
         </li>
         
@@ -171,7 +171,7 @@
           >
             <span class="name">gridcraft v0.7.0</span>
             <span class="size"></span>
-            <span class="date">10/16/2026 11:22:10 AM</span>
+            <span class="date">10/16/2026 11:52:01 AM</span>
           </a>
         </li>
         
@@ -179,21 +179,11 @@
     </div>
 
     <script>
-      search.onkeyup = () => {
-        const str = search.value.toLowerCase();
-        const links = files.querySelectorAll("a");
-
-        links.forEach((link) => {
-          const text = link.textContent.toLowerCase();
-
-          if (text === "..") return;
-          if (str.length && text.includes(str)) {
-            link.classList.add("highlight");
-          } else {
-            link.classList.remove("highlight");
-          }
-        });
-      };
+      
+      search.onkeyup = () => files.querySelectorAll("a")
+      .forEach(l => l.textContent !== ".." && l.classList
+      .toggle("highlight", search.value && l.textContent
+      .toLowerCase().includes(search.value.toLowerCase())));
     </script>
   </body>
 </html>
