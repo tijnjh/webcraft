@@ -36,11 +36,10 @@
 
     <script>
       // prettier-ignore
-      search.onkeyup = e => files.querySelectorAll
-      ("a").forEach(l => l.textContent.toLowerCase()
-      !== ".." && l.classList[e.target.value.length
-      && l.textContent.toLowerCase().includes(e.target
-      .value.toLowerCase()) ? "add" : "remove"]("highlight"));
+      search.onkeyup = () => files.querySelectorAll("a")
+      .forEach(l => l.textContent !== ".." && l.classList
+      .toggle("highlight", search.value && l.textContent
+      .toLowerCase().includes(search.value.toLowerCase())));
     </script>
   </body>
 </html>
