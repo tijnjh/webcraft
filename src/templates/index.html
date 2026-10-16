@@ -37,17 +37,12 @@
     <script>
       search.onkeyup = () => {
         const str = search.value.toLowerCase();
-        const links = files.querySelectorAll("a");
-
-        links.forEach((link) => {
+        files.querySelectorAll("a").forEach((link) => {
           const text = link.textContent.toLowerCase();
-
           if (text === "..") return;
-          if (str.length && text.includes(str)) {
-            link.classList.add("highlight");
-          } else {
-            link.classList.remove("highlight");
-          }
+          str.length && text.includes(str)
+            ? link.classList.add("highlight")
+            : link.classList.remove("highlight");
         });
       };
     </script>
